@@ -46,17 +46,18 @@ void my_bcast(void *data, int count, MPI_Datatype datatype, int root, MPI_Comm c
 }
 
 int main(int argc, char **argv) {
+    int dataLength = atoi(argv[1]);
     MPI_Init(NULL, NULL);
 
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    char data[120];
+    char data[dataLength];
     if (world_rank == 0) {
         strcpy(data, "Ana are mere.");
-        my_bcast(&data, strlen(data)+1, MPI_CHAR, 0, MPI_COMM_WORLD);
+        my_bcast(&data, dataLength + 1, MPI_CHAR, 0, MPI_COMM_WORLD);
     } else {
-        my_bcast(&data, strlen(data)+1, MPI_CHAR, 0, MPI_COMM_WORLD);
+        my_bcast(&data, dataLength + 1, MPI_CHAR, 0, MPI_COMM_WORLD);
     }
 
     MPI_Finalize();
