@@ -2,14 +2,14 @@
 
 ## How to run?
 
----
-`sh do_it.sh param1 param2 param3 param4`
----
+```console
+sh do_it.sh param1 param2 param3 param4
+```
 
-* param1: number of proceses
-* param2: length of the data (bytes)
-* param3: number of trials
-* param4: file name
+1. number of proceses
+2. length of the data (bytes)
+3. number of trials
+4. file name
 
 ## Algorithms for broadcast
 
