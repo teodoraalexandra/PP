@@ -21,6 +21,7 @@ sh do_it.sh param1 param2 param3 param4
 ## Execution time
 
 **Simple (50 trials)**
+In this algorithm, the parent process (0) sends data to all its children. All children receive the message from process 0.
 
 | Processes         | 1             | 4             | 16            | 64            | 256           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -31,6 +32,7 @@ sh do_it.sh param1 param2 param3 param4
 | Data: 1 Mb        | 176297993     | 205180695     | 465323078     | 141765439     | 142048781     |
 
 **Chain (50 trials)**
+In this algorithm, the parent process (first) sends data only to its first child. Last process (n) receives data from proces n-1 and sends nothing. Other processes (not first nor last) sends data to next process and receives data from previous process.
 
 | Processes         | 1             | 4             | 16            | 64            | 256           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -41,22 +43,24 @@ sh do_it.sh param1 param2 param3 param4
 | Data: 1 Mb        | 179340602     | 208552319     | 461695163     | 139072808     | 141329465     |
 
 **Binary (50 trials)**
+In this algorithm, the parent process sends data to 2 child process. The process that is not leaf in the binary tree, receives data from parent and sends data to next 2 childs. Leaf processes do not send data, they only receive from parent.
 
-| Processes         | 1             | 4             | 16            | 64            | 256           |
+| Processes         | 1             | 3             | 15            | 63            | 255           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Data: 8 bytes     |               |               |               |               |               |          
-| Data: 1 kb        |               |               |               |               |               |
-| Data: 64 kb       |               |               |               |               |               |
-| Data: 512 kb      |               |               |               |               |               |
-| Data: 1 Mb        |               |               |               |               |               |
+| Data: 8 bytes     | 176732248     | 190479375     | 428970040     | 139615688     | 136904086     |          
+| Data: 1 kb        | 191324480     | 186212436     | 435848794     | 129469536     | 131567136     |
+| Data: 64 kb       | 168910094     | 192484191     | 423422591     | 149924051     | 142399279     |
+| Data: 512 kb      | 177172998     | 194562918     | 432224650     | 144551208     | 142964668     |
+| Data: 1 Mb        | 178267361     | 192951688     | 444934022     | 142708104     | 156350535     |
 
 
 **Binomial (50 trials)**
+In this algorithm, each process id can be seen as a binary number, and we will compute the source and destination using bitwise operations. Everytime a new process is created, it will become parent in the next generation. 
 
 | Processes         | 1             | 4             | 16            | 64            | 256           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Data: 8 bytes     |               |               |               |               |               |          
-| Data: 1 kb        |               |               |               |               |               |
-| Data: 64 kb       |               |               |               |               |               |
-| Data: 512 kb      |               |               |               |               |               |
-| Data: 1 Mb        |               |               |               |               |               |
+| Data: 8 bytes     | 176625785     | 210752981     | 451765470     | 140822245     | 143672003     |          
+| Data: 1 kb        | 182476504     | 206374966     | 466472949     | 143003978     | 141564087     |
+| Data: 64 kb       | 180280868     | 211074611     | 463993604     | 141338914     | 144224685     |
+| Data: 512 kb      | 180524892     | 209013157     | 450099673     | 137441736     | 141685388     |
+| Data: 1 Mb        | 175434870     | 202857436     | 471924466     | 140974574     | 141040401     |
