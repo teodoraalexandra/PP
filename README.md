@@ -6,7 +6,7 @@
 sh do_it.sh param1 param2 param3 param4
 ```
 
-1. number of proceses
+1. number of processes
 2. length of the data (bytes)
 3. number of trials
 4. file name
