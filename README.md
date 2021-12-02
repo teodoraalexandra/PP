@@ -32,7 +32,7 @@ In this algorithm, the parent process (0) sends data to all its children. All ch
 | Data: 1 Mb        | 176297993     | 205180695     | 465323078     | 141765439     | 142048781     |
 
 **Chain (50 trials)**
-In this algorithm, the parent process (first) sends data only to its first child. Last process (n) receives data from proces n-1 and sends nothing. Other processes (not first nor last) sends data to next process and receives data from previous process.
+In this algorithm, the parent process (first) sends data only to its first child. Last process (n) receives data from process n-1 and sends nothing. Other processes (not first nor last) send data to next process and receives data from previous process.
 
 | Processes         | 1             | 4             | 16            | 64            | 256           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -43,7 +43,7 @@ In this algorithm, the parent process (first) sends data only to its first child
 | Data: 1 Mb        | 179340602     | 208552319     | 461695163     | 139072808     | 141329465     |
 
 **Binary (50 trials)**
-In this algorithm, the parent process sends data to 2 child process. The process that is not leaf in the binary tree, receives data from parent and sends data to next 2 childs. Leaf processes do not send data, they only receive from parent.
+In this algorithm, the parent process sends data to 2 child processes. The process that is not leaf in the binary tree, receives data from the parent and sends data to the next 2 childs. Leaf processes do not send data, they only receive from parents.
 
 | Processes         | 1             | 3             | 15            | 63            | 255           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -55,7 +55,7 @@ In this algorithm, the parent process sends data to 2 child process. The process
 
 
 **Binomial (50 trials)**
-In this algorithm, each process id can be seen as a binary number, and we will compute the source and destination using bitwise operations. Everytime a new process is created, it will become parent in the next generation. 
+In this algorithm, each process id can be seen as a binary number, and we will compute the source and destination using bitwise operations. Everytime a new process is created, it will become a parent in the next generation. 
 
 | Processes         | 1             | 4             | 16            | 64            | 256           |
 | ----------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
