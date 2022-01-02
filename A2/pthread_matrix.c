@@ -10,6 +10,8 @@ const int MAX_THREADS = 1024;
 int thread_count;
 int m;
 int n;
+int k;
+int computed_elements;
 float* matrix;
 pthread_mutex_t mutex;
 pthread_cond_t condition_variable;
@@ -49,15 +51,15 @@ int main(int argc, char* argv[]) {
    }
 
    /* Print the initial matrix */
-   printf("Initial matrix\n");
+   //printf("Initial matrix\n");
    for(int i = 0; i < m; i++) {
       for(int j = 0; j < n; j++) {
-        printf("%f     ", *(matrix + i * n + j));
+        //printf("%f     ", *(matrix + i * n + j));
       }
-      printf("\n");
+      //printf("\n");
    }
 
-   printf("\n");
+   //printf("\n");
    GET_TIME(start);
    for (thread = 0; thread < thread_count; thread++)  
       pthread_create(&thread_handles[thread], NULL, Thread_computation, (void*)thread);  
@@ -67,17 +69,18 @@ int main(int argc, char* argv[]) {
    GET_TIME(finish);
    elapsed = finish - start;
 
-   printf("\n");
+   //printf("\n");
    /* Print the final matrix */
    for(int i = 0; i < m; i++) {
    		for(int j = 0; j < n; j++) {
-   			printf("%f     ", *(matrix + i * n + j));
+   			//printf("%f     ", *(matrix + i * n + j));
    		}
-   		printf("\n");
+   		//printf("\n");
    }
 
    printf("\n");
    printf("The elapsed time is %e seconds\n", elapsed);
+   //printf("Computed elements: %d\n", computed_elements);
    printf("\n");
 
    pthread_mutex_destroy(&mutex);
@@ -90,33 +93,36 @@ int main(int argc, char* argv[]) {
 /*------------------------------------------------------------------*/
 void* Thread_computation(void* rank) {
    	int my_rank = (int) rank;
-    printf("Thread %d started.\n", my_rank);
+    //printf("Thread %d started.\n", my_rank);
 
   	/* Interval on which each thread will operate */
   	float number_of_columns = (n - 2) / 350.0;
   	float number_of_threads = thread_count / 350.0;
   	int columns_per_thread = ceil(number_of_columns / number_of_threads);
   	
-    for(int i = 1; i < m - 1; i++) {
-    	for(int j = 1; j <= columns_per_thread; j++) {
-    		int assigned_column = my_rank * columns_per_thread + j;
-    		if (assigned_column != n - 1) {
-          pthread_mutex_lock(&mutex);
-          while (*(matrix + i * n + (assigned_column - 1)) == 0) {
-            /* Wait until element from left is computed */
-            printf("Thread %d is waiting...\n", my_rank);
-            pthread_cond_wait(&condition_variable, &mutex);
-          }
+    for(int iteration = 0; iteration < k; iteration++) {
+      for(int i = 1; i < m - 1; i++) {
+      	for(int j = 1; j <= columns_per_thread; j++) {
+      		int assigned_column = my_rank * columns_per_thread + j;
+      		if (assigned_column != n - 1) {
+            pthread_mutex_lock(&mutex);
+            while (*(matrix + i * n + (assigned_column - 1)) == 0) {
+              /* Wait until element from left is computed */
+              //printf("Thread %d is waiting...\n", my_rank);
+              pthread_cond_wait(&condition_variable, &mutex);
+            }
 
-          /* Modifying the matrix */
-          if (*(matrix + i * n + (assigned_column - 1)) != 0) {
-            *(matrix + i * n + assigned_column) = (*(matrix + (i - 1) * n + assigned_column) + *(matrix + (i + 1) * n + assigned_column) + *(matrix + i * n + (assigned_column - 1)) + *(matrix + i * n + (assigned_column + 1))) / 4;
-    		    printf("Compute element M[%d,%d]\n", i, assigned_column);
-            pthread_cond_signal(&condition_variable);
-            pthread_mutex_unlock(&mutex);
+            /* Modifying the matrix */
+            if (*(matrix + i * n + (assigned_column - 1)) != 0) {
+              *(matrix + i * n + assigned_column) = (*(matrix + (i - 1) * n + assigned_column) + *(matrix + (i + 1) * n + assigned_column) + *(matrix + i * n + (assigned_column - 1)) + *(matrix + i * n + (assigned_column + 1))) / 4;
+      		    //printf("Compute element M[%d,%d]\n", i, assigned_column);
+              computed_elements++;
+              pthread_cond_signal(&condition_variable);
+              pthread_mutex_unlock(&mutex);
+            }
           }
-        }
-    	}
+      	}
+      }
     }
    
    	return NULL;
@@ -132,5 +138,6 @@ void Get_args(int argc, char* argv[]) {
    thread_count = atoi(argv[1]);  
    m = atoi(argv[2]);
    n = atoi(argv[3]);
+   k = atoi(argv[4]);
 }  /* Get_args */
 
