@@ -105,22 +105,22 @@ void* Thread_computation(void* rank) {
       	for(int j = 1; j <= columns_per_thread; j++) {
       		int assigned_column = my_rank * columns_per_thread + j;
       		if (assigned_column != n - 1) {
-            pthread_mutex_lock(&mutex);
-            while (*(matrix + i * n + (assigned_column - 1)) == 0) {
-              /* Wait until element from left is computed */
-              //printf("Thread %d is waiting...\n", my_rank);
-              pthread_cond_wait(&condition_variable, &mutex);
-            }
+                pthread_mutex_lock(&mutex);
+                while (*(matrix + i * n + (assigned_column - 1)) == 0) {
+                  /* Wait until element from left is computed */
+                  //printf("Thread %d is waiting...\n", my_rank);
+                  pthread_cond_wait(&condition_variable, &mutex);
+                }
 
-            /* Modifying the matrix */
-            if (*(matrix + i * n + (assigned_column - 1)) != 0) {
-              *(matrix + i * n + assigned_column) = (*(matrix + (i - 1) * n + assigned_column) + *(matrix + (i + 1) * n + assigned_column) + *(matrix + i * n + (assigned_column - 1)) + *(matrix + i * n + (assigned_column + 1))) / 4;
-      		    //printf("Compute element M[%d,%d]\n", i, assigned_column);
-              computed_elements++;
-              pthread_cond_signal(&condition_variable);
-              pthread_mutex_unlock(&mutex);
+                /* Modifying the matrix */
+                if (*(matrix + i * n + (assigned_column - 1)) != 0) {
+                  *(matrix + i * n + assigned_column) = (*(matrix + (i - 1) * n + assigned_column) + *(matrix + (i + 1) * n + assigned_column) + *(matrix + i * n + (assigned_column - 1)) + *(matrix + i * n + (assigned_column + 1))) / 4;
+          		    //printf("Compute element M[%d,%d]\n", i, assigned_column);
+                  computed_elements++;
+                  pthread_cond_signal(&condition_variable);
+                  pthread_mutex_unlock(&mutex);
+                }
             }
-          }
       	}
       }
     }
